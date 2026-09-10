@@ -11,6 +11,16 @@ function login_user(array $u): void {
     session_regenerate_id(true);
     $_SESSION['admin_user']=['id'=>(int)$u['id'],'name'=>$u['name'],'email'=>$u['email'],'role'=>$u['role']];
 }
+
+function login_is_throttled(string $email): bool {
+    $key='login_attempts_'.hash('sha256',strtolower(trim($email)));$attempt=$_SESSION[$key]??['count'=>0,'at'=>0];
+    return $attempt['count']>=5 && time()-$attempt['at']<900;
+}
+function record_login_failure(string $email): void {
+    $key='login_attempts_'.hash('sha256',strtolower(trim($email)));$attempt=$_SESSION[$key]??['count'=>0,'at'=>time()];
+    if(time()-$attempt['at']>=900)$attempt=['count'=>0,'at'=>time()];$attempt['count']++;$attempt['at']=time();$_SESSION[$key]=$attempt;
+}
+function clear_login_failures(string $email): void { unset($_SESSION['login_attempts_'.hash('sha256',strtolower(trim($email)))]); }
 function logout_user(): void {
     $_SESSION=[];
     if (ini_get('session.use_cookies')) {

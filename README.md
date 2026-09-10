@@ -13,6 +13,11 @@ Nepal Disaster Archive is a PHP and MySQL web application for documenting Nepal'
 - Admin/editor authentication with password hashing and CSRF protection
 - Category management
 - Admin-only user management and story deletion
+- About Us page with archive sources, coverage, methodology, disclaimer, and update information
+- Emergency resource directory, preparedness guides, and English/Nepali safety content
+- Cover images, map coordinates, district/province browsing, and an interactive timeline
+- Advanced filtering by category, location, date range, and sort order
+- Draft, needs-review, and published editorial workflow with revision history
 
 ## Requirements
 
@@ -52,6 +57,12 @@ Nepal Disaster Archive is a PHP and MySQL web application for documenting Nepal'
    ```
 
 6. Create the first administrator account, sign in, and then delete or rename `create-admin.php` from the server.
+
+### Upgrade an existing installation
+
+If the database was created before the explorer features were added, import [`database/upgrade-features.sql`](database/upgrade-features.sql) once in phpMyAdmin. This adds story images, district/province and map coordinates, the review status, and revision history.
+
+For the complete feature set, import [`database/upgrade-all-features.sql`](database/upgrade-all-features.sql) after that migration. It adds gallery images, structured sources, correction reports, analytics events, and admin activity logs.
 
 ## Import starter stories in bulk
 

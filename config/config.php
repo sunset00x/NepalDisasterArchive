@@ -41,3 +41,26 @@ function slugify(string $text): string {
     $text = preg_replace('/[^\pL\pN]+/u','-',$text);
     return trim($text,'-') ?: 'story-'.time();
 }
+
+function nepal_locations(): array {
+    return [
+        'Koshi'=>['Bhojpur','Dhankuta','Ilam','Jhapa','Khotang','Morang','Okhaldhunga','Panchthar','Sankhuwasabha','Solukhumbu','Sunsari','Taplejung','Terhathum','Udayapur'],
+        'Madhesh'=>['Bara','Dhanusha','Mahottari','Parsa','Rautahat','Saptari','Sarlahi','Siraha'],
+        'Bagmati'=>['Bhaktapur','Chitwan','Dhading','Dolakha','Kathmandu','Kavrepalanchok','Lalitpur','Makwanpur','Nuwakot','Ramechhap','Rasuwa','Sindhuli','Sindhupalchok'],
+        'Gandaki'=>['Baglung','Gorkha','Kaski','Lamjung','Manang','Mustang','Myagdi','Nawalpur','Parbat','Syangja','Tanahun'],
+        'Lumbini'=>['Arghakhanchi','Banke','Bardiya','Dang','Gulmi','Kapilvastu','Nawalparasi West','Palpa','Pyuthan','Rolpa','Rukum East','Rupandehi'],
+        'Karnali'=>['Dailekh','Dolpa','Humla','Jajarkot','Jumla','Kalikot','Mugu','Rukum West','Salyan','Surkhet'],
+        'Sudurpashchim'=>['Achham','Baitadi','Bajhang','Bajura','Dadeldhura','Darchula','Doti','Kailali','Kanchanpur']
+    ];
+}
+
+function log_admin_activity(string $action, string $details = ''): void {
+    if (!function_exists('user') || !user()) return;
+    try { db()->prepare('INSERT INTO admin_activity(admin_id,action,details) VALUES(?,?,?)')->execute([user()['id'],$action,$details]); } catch (Throwable $e) { }
+}
+
+function track_event(string $eventType, ?int $storyId = null, string $searchTerm = ''): void {
+    try { db()->prepare('INSERT INTO analytics_events(story_id,event_type,search_term) VALUES(?,?,?)')->execute([$storyId,$eventType,$searchTerm?:null]); } catch (Throwable $e) { }
+}
+
+
