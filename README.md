@@ -53,6 +53,17 @@ Nepal Disaster Archive is a PHP and MySQL web application for documenting Nepal'
 
 6. Create the first administrator account, sign in, and then delete or rename `create-admin.php` from the server.
 
+## Import starter stories in bulk
+
+To add a curated starter dataset across all 13 default hazard categories, import [`database/seed-stories.sql`](database/seed-stories.sql) in phpMyAdmin after importing the main schema:
+
+1. Open `http://localhost/phpmyadmin`.
+2. Select the `nepal_disaster_archive` database.
+3. Open the **Import** tab and choose `database/seed-stories.sql`.
+4. Click **Import**.
+
+The seed file is safe to run more than once because each story has a unique slug and uses `INSERT IGNORE`. It adds representative historical entries, not a complete record of every disaster in Nepal. Verify and expand the articles with authoritative sources before treating them as a definitive historical dataset.
+
 ## URLs
 
 - Public archive: `http://localhost/nepal-disaster-archive/`
@@ -91,6 +102,5 @@ Historical dates, casualty figures, and magnitudes may vary between sources. Add
 - Run the application behind HTTPS in production.
 - Keep PHP, MySQL, and the web server updated.
 - Back up the database and uploaded files regularly.
-
 
 sunset00x (github & linkedin)
