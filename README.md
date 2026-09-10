@@ -1,0 +1,96 @@
+# Nepal Disaster Archive
+
+Nepal Disaster Archive is a PHP and MySQL web application for documenting Nepal's natural-disaster history. It provides a public archive of published stories and an authenticated editorial workspace for managing stories, categories, and user accounts.
+
+## Features
+
+- Public archive of published disaster stories
+- Search by title, location, year, summary, or content
+- Filter stories by hazard category
+- Story fields for dates, locations, impacts, casualties, magnitude, and sources
+- Draft and published story states
+- Featured stories on the public archive
+- Admin/editor authentication with password hashing and CSRF protection
+- Category management
+- Admin-only user management and story deletion
+
+## Requirements
+
+- XAMPP with Apache and MySQL
+- PHP 8.0 or later
+- PHP extensions: PDO MySQL and mbstring
+- A modern web browser
+
+## Installation with XAMPP
+
+1. Place this project in the XAMPP web root:
+
+   ```text
+   C:\xampp\htdocs\nepal-disaster-archive
+   ```
+
+2. Start **Apache** and **MySQL** from the XAMPP Control Panel.
+
+3. Create the database by importing [`database/schema.sql`](database/schema.sql) in phpMyAdmin, or run it with the MySQL client. The script creates the `nepal_disaster_archive` database, tables, default categories, and a starter story.
+
+4. Check the database settings in [`config/config.php`](config/config.php):
+
+   ```php
+   const DB_HOST = '127.0.0.1';
+   const DB_NAME = 'nepal_disaster_archive';
+   const DB_USER = 'root';
+   const DB_PASS = '';
+   const BASE_URL = '/nepal-disaster-archive';
+   ```
+
+   Update these values if your MySQL credentials or project folder differ.
+
+5. Open the one-time administrator setup page:
+
+   ```text
+   http://localhost/nepal-disaster-archive/create-admin.php
+   ```
+
+6. Create the first administrator account, sign in, and then delete or rename `create-admin.php` from the server.
+
+## URLs
+
+- Public archive: `http://localhost/nepal-disaster-archive/`
+- Story page: `http://localhost/nepal-disaster-archive/story.php?slug=story-slug`
+- Staff login: `http://localhost/nepal-disaster-archive/admin/login.php`
+- Admin dashboard: `http://localhost/nepal-disaster-archive/admin/`
+
+## Editorial workflow
+
+1. Sign in through the staff login page.
+2. Create a story from the dashboard or Stories page.
+3. Assign a category and add verified historical sources.
+4. Save the story as a draft while it is being reviewed.
+5. Change the status to `PUBLISHED` when it is ready for the public archive.
+6. Mark important stories as featured when appropriate.
+
+Historical dates, casualty figures, and magnitudes may vary between sources. Add source notes and clearly communicate uncertainty where appropriate.
+
+## Project structure
+
+```text
+.
+├── index.php              Public archive and search
+├── story.php              Public story detail page
+├── create-admin.php       One-time administrator setup
+├── admin/                 Authenticated editorial interface
+├── config/                Database and authentication helpers
+├── database/schema.sql    Database schema and starter data
+└── uploads/stories/       Story media upload directory
+```
+
+## Security notes
+
+- Do not leave `create-admin.php` accessible after creating the first account.
+- Use a strong database password outside a local development environment.
+- Run the application behind HTTPS in production.
+- Keep PHP, MySQL, and the web server updated.
+- Back up the database and uploaded files regularly.
+
+
+sunset00x (github & linkedin)
