@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS stories (
  title VARCHAR(255) NOT NULL,
  slug VARCHAR(255) NOT NULL UNIQUE,
  category_id INT UNSIGNED NULL,
+ story_type ENUM('DISASTER','HUMAN') NOT NULL DEFAULT 'DISASTER',
  event_date DATE NULL,
  year_label VARCHAR(30),
  location VARCHAR(255),
@@ -38,6 +39,9 @@ CREATE TABLE IF NOT EXISTS stories (
  injuries VARCHAR(100),
  magnitude VARCHAR(100),
  impact TEXT,
+ storyteller_name VARCHAR(190),
+ storyteller_role VARCHAR(120),
+ consent_note TEXT,
  sources TEXT,
  featured TINYINT(1) NOT NULL DEFAULT 0,
  status ENUM('DRAFT','REVIEW','PUBLISHED') NOT NULL DEFAULT 'DRAFT',
@@ -99,6 +103,73 @@ CREATE TABLE IF NOT EXISTS correction_reports (
  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
  FOREIGN KEY(story_id) REFERENCES stories(id) ON DELETE SET NULL,
  INDEX(status)
+);
+
+CREATE TABLE IF NOT EXISTS story_submissions (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ title VARCHAR(255) NOT NULL,
+ storyteller_name VARCHAR(190),
+ storyteller_role VARCHAR(120),
+ email VARCHAR(190),
+ location VARCHAR(255),
+ event_date DATE NULL,
+ story_content LONGTEXT NOT NULL,
+ image_path VARCHAR(255),
+ is_anonymous TINYINT(1) NOT NULL DEFAULT 0,
+ consent_confirmed TINYINT(1) NOT NULL DEFAULT 0,
+ status ENUM('SUBMITTED','APPROVED','REJECTED') NOT NULL DEFAULT 'SUBMITTED',
+ reviewed_by INT UNSIGNED NULL,
+ reviewed_at DATETIME NULL,
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ FOREIGN KEY(reviewed_by) REFERENCES admins(id) ON DELETE SET NULL,
+ INDEX(status), INDEX(created_at)
+);
+
+CREATE TABLE IF NOT EXISTS volunteers (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ full_name VARCHAR(190) NOT NULL,
+ email VARCHAR(190) NOT NULL,
+ phone VARCHAR(50) NOT NULL,
+ emergency_contact_name VARCHAR(190),
+ emergency_contact_phone VARCHAR(50),
+ volunteer_type VARCHAR(80) NOT NULL,
+ location VARCHAR(255) NOT NULL,
+ availability ENUM('AVAILABLE','ON_CALL','UNAVAILABLE') NOT NULL DEFAULT 'ON_CALL',
+ skills TEXT,
+ role_details TEXT,
+ languages VARCHAR(255),
+ blood_type VARCHAR(5),
+ last_donation_date DATE NULL,
+ consent_confirmed TINYINT(1) NOT NULL DEFAULT 0,
+ status ENUM('PENDING','ACTIVE','INACTIVE','ARCHIVED') NOT NULL DEFAULT 'PENDING',
+ reviewed_by INT UNSIGNED NULL,
+ reviewed_at DATETIME NULL,
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ FOREIGN KEY(reviewed_by) REFERENCES admins(id) ON DELETE SET NULL,
+ INDEX(volunteer_type), INDEX(location), INDEX(availability), INDEX(status)
+);
+
+CREATE TABLE IF NOT EXISTS emergency_contacts (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ service VARCHAR(80) NOT NULL,
+ organization VARCHAR(190) NOT NULL,
+ title VARCHAR(190) NOT NULL,
+ phone VARCHAR(255) NOT NULL,
+ province VARCHAR(120),
+ district VARCHAR(120),
+ municipality VARCHAR(190),
+ address VARCHAR(255),
+ coverage TEXT,
+ availability_note TEXT,
+ verification_status ENUM('OFFICIAL','LOCAL_VERIFIED','NEEDS_VERIFICATION','REPORTED_INACTIVE') NOT NULL DEFAULT 'NEEDS_VERIFICATION',
+ last_verified DATE NULL,
+ source_url VARCHAR(500),
+ notes TEXT,
+ active TINYINT(1) NOT NULL DEFAULT 1,
+ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ INDEX(service), INDEX(province), INDEX(district), INDEX(active), INDEX(verification_status)
 );
 
 CREATE TABLE IF NOT EXISTS analytics_events (

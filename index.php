@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/config/config.php';
-$q=trim($_GET['q']??'');$cat=trim($_GET['category']??'');$district=trim($_GET['district']??'');$province=trim($_GET['province']??'');$from=trim($_GET['from']??'');$to=trim($_GET['to']??'');$sort=$_GET['sort']??'featured';$where="WHERE s.status='PUBLISHED'";$params=[];
+$q=trim($_GET['q']??'');$cat=trim($_GET['category']??'');$district=trim($_GET['district']??'');$province=trim($_GET['province']??'');$from=trim($_GET['from']??'');$to=trim($_GET['to']??'');$sort=$_GET['sort']??'featured';$where="WHERE s.status='PUBLISHED' AND s.story_type='DISASTER'";$params=[];
 if($q!==''){$where.=" AND (s.title LIKE ? OR s.location LIKE ? OR s.district LIKE ? OR s.province LIKE ? OR s.summary LIKE ? OR s.content LIKE ? OR s.year_label LIKE ?)";for($i=0;$i<7;$i++)$params[]="%$q%";}
 if($cat!==''){$where.=' AND c.slug=?';$params[]=$cat;}if($district!==''){$where.=' AND s.district=?';$params[]=$district;}if($province!==''){$where.=' AND s.province=?';$params[]=$province;}if($from!==''){$where.=' AND s.event_date>=?';$params[]=$from;}if($to!==''){$where.=' AND s.event_date<=?';$params[]=$to;}
 $order=$sort==='oldest'?'COALESCE(s.event_date,"9999-12-31") ASC':($sort==='newest'?'COALESCE(s.event_date,"1000-01-01") DESC':'s.featured DESC,COALESCE(s.event_date,"1000-01-01") DESC');
@@ -20,6 +20,8 @@ $locationData=nepal_locations();$provinces=array_keys($locationData);$districts=
         <a href="#explore">Explore</a>
         <a href="<?=BASE_URL?>/resources.php">Emergency Help</a>
         <a href="<?=BASE_URL?>/preparedness.php">Guides</a>
+        <a href="<?=BASE_URL?>/human-stories.php">Human Stories</a>
+        <a href="<?=BASE_URL?>/volunteer.php">Volunteer Network</a>
         <a href="<?=BASE_URL?>/about.php">About Us</a>
         
         <a href="<?=BASE_URL?>/admin/login.php">Editor Login</a>
